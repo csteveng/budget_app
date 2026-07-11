@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-badge" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="13" stroke="var(--color-navy)" stroke-width="2.25" />
+            <path d="M16 9v14M12.5 12.2c0-1.5 1.6-2.4 3.5-2.4s3.5 1 3.5 2.4-1.6 2-3.5 2.4c-1.9.4-3.5 1-3.5 2.4s1.6 2.4 3.5 2.4 3.5-.9 3.5-2.4"
+                stroke="var(--color-navy)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <h1>Budget App</h1>
+      </div>
+      <p class="tagline">Track what comes in, track what goes out.</p>
+    </header>
+
+    <!-- Summary dashboard -->
+    <section class="summary-grid" aria-label="Balance summary">
+      <div class="summary-card summary-card--income">
+        <span class="summary-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 19V5M6 11l6-6 6 6" stroke="var(--color-teal)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div>
+          <p class="summary-label">Income</p>
+          <p class="summary-amount" id="totalIncome">$0.00</p>
+        </div>
+      </div>
+
+      <div class="summary-card summary-card--balance">
+        <p class="summary-label">Balance</p>
+        <p class="summary-amount summary-amount--big" id="totalBalance">$0.00</p>
+      </div>
+
+      <div class="summary-card summary-card--expense">
+        <span class="summary-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5v14M6 13l6 6 6-6" stroke="var(--color-orange)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div>
+          <p class="summary-label">Expenses</p>
+          <p class="summary-amount" id="totalExpense">$0.00</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="main-grid">
+
+      <!-- Left column: Add transaction + Filters -->
+      <div class="main-col">
+
+        <!-- Add transaction form -->
+        <section class="card" aria-labelledby="addTransactionHeading">
+          <h2 id="addTransactionHeading">Add a transaction</h2>
+          <form id="transactionForm" novalidate>
+            <div class="form-row form-row--type" role="radiogroup" aria-label="Transaction type">
+              <button type="button" class="type-toggle type-toggle--expense active" data-type="expense" aria-pressed="true">
+                <span aria-hidden="true">−</span> Expense
+              </button>
+              <button type="button" class="type-toggle type-toggle--income" data-type="income" aria-pressed="false">
+                <span aria-hidden="true">+</span> Income
+              </button>
+            </div>
+            <input type="hidden" id="transactionType" value="expense" />
+
+            <div class="form-row">
+              <label for="amount">Amount</label>
+              <input type="number" id="amount" name="amount" min="0" step="0.01" placeholder="0.00" required />
+            </div>
+
+            <div class="form-row">
+              <label for="description">Description</label>
+              <input type="text" id="description" name="description" placeholder="e.g. Groceries" required />
+            </div>
+
+            <div class="form-row">
+              <label for="category">Category</label>
+              <select id="category" name="category" required></select>
+            </div>
+
+            <div class="form-row">
+              <label for="date">Date</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add transaction</button>
+          </form>
+        </section>
+
+        <!-- Chart -->
+        <section class="card" aria-labelledby="chartHeading">
+          <h2 id="chartHeading">Spending by category</h2>
+          <canvas id="categoryChart" width="360" height="220" role="img" aria-label="Bar chart of spending by category"></canvas>
+          <p class="empty-note" id="chartEmptyNote">Add an expense to see your breakdown.</p>
+        </section>
+
+      </div>
+
+      <!-- Right column: Filters + Transaction list -->
+      <div class="main-col main-col--wide">
+
+        <section class="card" aria-labelledby="filterHeading">
+          <h2 id="filterHeading">Transactions</h2>
+
+          <div class="filters">
+            <input type="text" id="searchText" placeholder="Search description…" aria-label="Search transactions" />
+
+            <select id="filterType" aria-label="Filter by type">
+              <option value="all">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+            <select id="filterCategory" aria-label="Filter by category">
+              <option value="all">All categories</option>
+            </select>
+
+            <input type="date" id="filterDateFrom" aria-label="From date" />
+            <input type="date" id="filterDateTo" aria-label="To date" />
+
+            <button type="button" id="clearFilters" class="btn btn-ghost">Clear filters</button>
+          </div>
+
+          <ul class="transaction-list" id="transactionList" aria-live="polite">
+            <!-- Transactions render here -->
+          </ul>
+
+          <p class="empty-note" id="listEmptyNote">No transactions yet. Add your first one to get started.</p>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Transaction row template -->
+  <template id="transactionRowTemplate">
+    <li class="transaction-row" data-id="">
+      <span class="tx-icon-badge" aria-hidden="true"></span>
+      <div class="tx-main">
+        <p class="tx-description"></p>
+        <p class="tx-meta"><span class="tx-category"></span> · <span class="tx-date"></span></p>
+      </div>
+      <p class="tx-amount"></p>
+      <button type="button" class="tx-remove" aria-label="Remove transaction">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 5l10 10M15 5L5 15" stroke="var(--color-navy)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <script type="module" src="js/storage.js"></script>
+  <script type="module" src="js/transactions.js"></script>
+  <script type="module" src="js/charts.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
