@@ -9,6 +9,7 @@ import {
   filterTransactions,
   getSummary,
   getExpenseByCategory,
+  loadSampleData,
 } from "./transactions.js";
 import { renderCategoryChart } from "./charts.js";
 
@@ -34,6 +35,7 @@ const filterCategory = document.getElementById("filterCategory");
 const filterDateFrom = document.getElementById("filterDateFrom");
 const filterDateTo = document.getElementById("filterDateTo");
 const clearFiltersBtn = document.getElementById("clearFilters");
+const loadSampleDataBtn = document.getElementById("loadSampleData");
 
 const transactionList = document.getElementById("transactionList");
 const listEmptyNote = document.getElementById("listEmptyNote");
@@ -110,6 +112,12 @@ function wireFilters() {
     filterDateFrom.value = "";
     filterDateTo.value = "";
     renderTransactionList();
+  });
+
+  loadSampleDataBtn.addEventListener("click", () => {
+    loadSampleData();
+    populateFilterCategoryOptions();
+    renderAll();
   });
 }
 
