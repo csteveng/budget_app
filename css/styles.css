@@ -251,7 +251,10 @@ body {
 /* Filters */
 .filters {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "search search search clear"
+    "type   category from   to";
   gap: 8px;
   margin-bottom: 16px;
 }
@@ -267,6 +270,13 @@ body {
   color: var(--color-text);
   min-width: 0;
 }
+
+#searchText     { grid-area: search; }
+#clearFilters   { grid-area: clear; }
+#filterType     { grid-area: type; }
+#filterCategory { grid-area: category; }
+#filterDateFrom { grid-area: from; }
+#filterDateTo   { grid-area: to; }
 
 /* Transaction list */
 .transaction-list {
@@ -356,5 +366,12 @@ body {
 @media (max-width: 860px) {
   .main-grid { grid-template-columns: 1fr; }
   .summary-grid { grid-template-columns: 1fr; }
-  .filters { grid-template-columns: 1fr 1fr; }
+  .filters {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "search search"
+      "type category"
+      "from to"
+      "clear clear";
+  }
 }
